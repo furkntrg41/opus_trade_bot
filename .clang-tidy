@@ -1,0 +1,86 @@
+# Opus Trade Bot - Clang Tidy Configuration
+# Static analysis rules for HFT-grade code quality
+
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  cert-*,
+  -cert-err58-cpp,
+  clang-analyzer-*,
+  cppcoreguidelines-*,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-type-reinterpret-cast,
+  google-*,
+  -google-readability-todo,
+  hicpp-*,
+  -hicpp-signed-bitwise,
+  misc-*,
+  -misc-non-private-member-variables-in-classes,
+  modernize-*,
+  -modernize-use-trailing-return-type,
+  performance-*,
+  portability-*,
+  readability-*,
+  -readability-magic-numbers,
+  -readability-identifier-length,
+  -readability-function-cognitive-complexity
+
+WarningsAsErrors: ''
+
+HeaderFilterRegex: 'include/opus/.*\.hpp$'
+
+CheckOptions:
+  # Naming conventions
+  - key: readability-identifier-naming.NamespaceCase
+    value: lower_case
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: lower_case
+  - key: readability-identifier-naming.VariableCase
+    value: lower_case
+  - key: readability-identifier-naming.ParameterCase
+    value: lower_case
+  - key: readability-identifier-naming.MemberCase
+    value: lower_case
+  - key: readability-identifier-naming.PrivateMemberSuffix
+    value: '_'
+  - key: readability-identifier-naming.ConstantCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.EnumConstantCase
+    value: CamelCase
+  - key: readability-identifier-naming.TemplateParameterCase
+    value: CamelCase
+  - key: readability-identifier-naming.TypeAliasCase
+    value: CamelCase
+  - key: readability-identifier-naming.ConceptCase
+    value: CamelCase
+  
+  # Performance settings
+  - key: performance-unnecessary-value-param.AllowedTypes
+    value: 'std::string_view;std::span'
+  - key: performance-move-const-arg.CheckTriviallyCopyableMove
+    value: false
+  
+  # Modernize settings
+  - key: modernize-use-nullptr.NullMacros
+    value: 'NULL'
+  - key: modernize-loop-convert.MinConfidence
+    value: reasonable
+  - key: modernize-pass-by-value.IncludeStyle
+    value: google
+  
+  # Misc
+  - key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
+    value: true
+  - key: readability-braces-around-statements.ShortStatementLines
+    value: 0
+  - key: readability-implicit-bool-conversion.AllowPointerConditions
+    value: true
+
+FormatStyle: file

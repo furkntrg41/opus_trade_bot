@@ -1,0 +1,205 @@
+﻿MSBuild version 17.14.40+3e7442088 for .NET Framework
+
+  opus_core.vcxproj -> C:\Users\furka\Desktop\opus_trade_bot\build\Release\opus_core.lib
+  websocket_client.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_network.vcxproj]
+  (compiling source file '../src/network/websocket_client.cpp')
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\network\websocket_client.cpp(314,18): error C2280: 'std::atomic<bool>::atomic(const std::atomic<bool> &)': attempting to reference a deleted function [C:\Users\furka\Desktop\opus_trade_bot\build\opus_network.vcxproj]
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\atomic(2151,5):
+      see declaration of 'std::atomic<bool>::atomic'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\atomic(2151,5):
+      'std::atomic<bool>::atomic(const std::atomic<bool> &)': function was explicitly deleted
+      C:\Users\furka\Desktop\opus_trade_bot\src\network\websocket_client.cpp(314,64):
+      see reference to function 'opus::network::WebSocketClient::WebSocketClient(opus::network::WebSocketClient &&) noexcept'
+  
+  rest_client.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_network.vcxproj]
+  (compiling source file '../src/network/rest_client.cpp')
+  
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+C:\Users\furka\Desktop\opus_trade_bot\src\network\rest_client.cpp(163,34): error C2589: '(': illegal token on right side of '::' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_network.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\network\rest_client.cpp(163,22): error C2062: type 'unknown-type' unexpected [C:\Users\furka\Desktop\opus_trade_bot\build\opus_network.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\network\rest_client.cpp(163,34): error C2059: syntax error: ')' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_network.vcxproj]
+  binary_writer.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_market.vcxproj]
+  (compiling source file '../src/market/binary_writer.cpp')
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\market\binary_writer.cpp(37,27): error C2039: 'timestamp': is not a member of 'opus::MarketTick' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_market.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(219,8):
+      see declaration of 'opus::MarketTick'
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\market\binary_writer.cpp(41,30): error C2039: 'price': is not a member of 'opus::MarketTick' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_market.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(219,8):
+      see declaration of 'opus::MarketTick'
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\market\binary_writer.cpp(42,28): error C2039: 'quantity': is not a member of 'opus::MarketTick' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_market.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(219,8):
+      see declaration of 'opus::MarketTick'
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\market\binary_writer.cpp(47,50): error C2039: 'side': is not a member of 'opus::MarketTick' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_market.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(219,8):
+      see declaration of 'opus::MarketTick'
+  
+  test_ring_buffer.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\ring_buffer.hpp(173,1): warning C4324: 'opus::SPSCRingBuffer<TestMessage,64>': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+  (compiling source file '../../tests/unit/test_ring_buffer.cpp')
+      C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\ring_buffer.hpp(173,1):
+      the template instantiation context (the oldest one first) is
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(25,43):
+          see reference to class template instantiation 'opus::SPSCRingBuffer<TestMessage,64>' being compiled
+  
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\ring_buffer.hpp(176,44): warning C4324: 'opus::SPSCRingBuffer<TestMessage,64>': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+  (compiling source file '../../tests/unit/test_ring_buffer.cpp')
+  
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(50,24): warning C4834: discarding return value of function with [[nodiscard]] attribute [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(74,28): warning C4834: discarding return value of function with [[nodiscard]] attribute [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(77,20): warning C4834: discarding return value of function with [[nodiscard]] attribute [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(86,24): warning C4834: discarding return value of function with [[nodiscard]] attribute [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(99,5): error C7568: argument list missing after assumed function template 'PoolAllocator' [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(101,5): error C2660: 'testing::internal::EqHelper::Compare': function does not take 3 arguments [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1422,26):
+      see declaration of 'testing::internal::EqHelper::Compare'
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1429,26):
+      could be 'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,std::nullptr_t,T *)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(101,5):
+          'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,std::nullptr_t,T *)': expects 4 arguments - 3 provided
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1410,26):
+      or       'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,const T1 &,const T2 &)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(101,5):
+          'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,const T1 &,const T2 &)': expects 4 arguments - 3 provided
+      C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(101,5):
+      while trying to match the argument list '(const char [16], const char [4], int)'
+  
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(102,5): error C2660: 'testing::internal::EqHelper::Compare': function does not take 3 arguments [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1422,26):
+      see declaration of 'testing::internal::EqHelper::Compare'
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1429,26):
+      could be 'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,std::nullptr_t,T *)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(102,5):
+          'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,std::nullptr_t,T *)': expects 4 arguments - 3 provided
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1410,26):
+      or       'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,const T1 &,const T2 &)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(102,5):
+          'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,const T1 &,const T2 &)': expects 4 arguments - 3 provided
+      C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(102,5):
+      while trying to match the argument list '(const char [17], const char [2], int)'
+  
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(106,5): error C2660: 'testing::internal::EqHelper::Compare': function does not take 3 arguments [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1422,26):
+      see declaration of 'testing::internal::EqHelper::Compare'
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1429,26):
+      could be 'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,std::nullptr_t,T *)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(106,5):
+          'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,std::nullptr_t,T *)': expects 4 arguments - 3 provided
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1410,26):
+      or       'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,const T1 &,const T2 &)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(106,5):
+          'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,const T1 &,const T2 &)': expects 4 arguments - 3 provided
+      C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(106,5):
+      while trying to match the argument list '(const char [17], const char [2], int)'
+  
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(109,5): error C2660: 'testing::internal::EqHelper::Compare': function does not take 3 arguments [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1422,26):
+      see declaration of 'testing::internal::EqHelper::Compare'
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1429,26):
+      could be 'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,std::nullptr_t,T *)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(109,5):
+          'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,std::nullptr_t,T *)': expects 4 arguments - 3 provided
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1410,26):
+      or       'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,const T1 &,const T2 &)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(109,5):
+          'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,const T1 &,const T2 &)': expects 4 arguments - 3 provided
+      C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(109,5):
+      while trying to match the argument list '(const char [17], const char [2], int)'
+  
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(113,5): error C7568: argument list missing after assumed function template 'PoolAllocator' [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(132,5): error C7568: argument list missing after assumed function template 'PoolAllocator' [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(139,5): error C2660: 'testing::internal::EqHelper::Compare': function does not take 3 arguments [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1422,26):
+      see declaration of 'testing::internal::EqHelper::Compare'
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1429,26):
+      could be 'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,std::nullptr_t,T *)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(139,5):
+          'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,std::nullptr_t,T *)': expects 4 arguments - 3 provided
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1410,26):
+      or       'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,const T1 &,const T2 &)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(139,5):
+          'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,const T1 &,const T2 &)': expects 4 arguments - 3 provided
+      C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(139,5):
+      while trying to match the argument list '(const char [17], const char [2], int)'
+  
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(143,5): error C2065: 'ArenaAllocator': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(143,20): error C2146: syntax error: missing ';' before identifier 'arena' [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(143,20): error C3861: 'arena': identifier not found [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(145,15): error C2065: 'arena': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(145,30): error C2062: type 'int' unexpected [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(148,18): error C2065: 'arena': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(148,33): error C2062: type 'double' unexpected [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(151,5): error C2065: 'arena': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(151,5): error C2672: 'testing::internal::CmpHelperGT': no matching overloaded function found [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1480,1):
+      could be 'testing::AssertionResult testing::internal::CmpHelperGT(const char *,const char *,const T1 &,const T2 &)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(151,5):
+          'testing::AssertionResult testing::internal::CmpHelperGT(const char *,const char *,const T1 &,const T2 &)': expects 4 arguments - 3 provided
+  
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(151,5): error C2737: 'gtest_ar': const object must be initialized [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(152,5): error C2065: 'arena': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(152,5): error C2672: 'testing::internal::CmpHelperLT': no matching overloaded function found [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1476,1):
+      could be 'testing::AssertionResult testing::internal::CmpHelperLT(const char *,const char *,const T1 &,const T2 &)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(152,5):
+          'testing::AssertionResult testing::internal::CmpHelperLT(const char *,const char *,const T1 &,const T2 &)': expects 4 arguments - 3 provided
+  
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(152,5): error C2737: 'gtest_ar': const object must be initialized [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(156,5): error C2065: 'ArenaAllocator': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(156,20): error C2146: syntax error: missing ';' before identifier 'arena' [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(156,20): error C3861: 'arena': identifier not found [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(158,5): error C2065: 'arena': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(158,20): error C2062: type 'int' unexpected [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(159,5): error C2065: 'arena': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(159,5): error C2672: 'testing::internal::CmpHelperGT': no matching overloaded function found [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1480,1):
+      could be 'testing::AssertionResult testing::internal::CmpHelperGT(const char *,const char *,const T1 &,const T2 &)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(159,5):
+          'testing::AssertionResult testing::internal::CmpHelperGT(const char *,const char *,const T1 &,const T2 &)': expects 4 arguments - 3 provided
+  
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(159,5): error C2737: 'gtest_ar': const object must be initialized [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(161,5): error C2065: 'arena': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(162,5): error C2065: 'arena': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(162,5): error C2660: 'testing::internal::EqHelper::Compare': function does not take 3 arguments [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1422,26):
+      see declaration of 'testing::internal::EqHelper::Compare'
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1429,26):
+      could be 'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,std::nullptr_t,T *)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(162,5):
+          'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,std::nullptr_t,T *)': expects 4 arguments - 3 provided
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1410,26):
+      or       'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,const T1 &,const T2 &)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(162,5):
+          'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,const T1 &,const T2 &)': expects 4 arguments - 3 provided
+      C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(162,5):
+      while trying to match the argument list '(const char [13], const char [2], int)'
+  
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(163,5): error C2065: 'arena': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(163,5): error C2660: 'testing::internal::EqHelper::Compare': function does not take 3 arguments [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1422,26):
+      see declaration of 'testing::internal::EqHelper::Compare'
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1429,26):
+      could be 'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,std::nullptr_t,T *)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(163,5):
+          'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,std::nullptr_t,T *)': expects 4 arguments - 3 provided
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\gtest\gtest.h(1410,26):
+      or       'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,const T1 &,const T2 &)'
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(163,5):
+          'testing::AssertionResult testing::internal::EqHelper::Compare(const char *,const char *,const T1 &,const T2 &)': expects 4 arguments - 3 provided
+      C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(163,5):
+      while trying to match the argument list '(const char [18], const char [5], int)'
+  

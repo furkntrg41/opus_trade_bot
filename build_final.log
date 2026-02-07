@@ -1,0 +1,226 @@
+﻿MSBuild version 17.14.40+3e7442088 for .NET Framework
+
+  opus_core.vcxproj -> C:\Users\furka\Desktop\opus_trade_bot\build\Release\opus_core.lib
+  Building Custom Rule C:/Users/furka/Desktop/opus_trade_bot/CMakeLists.txt
+  websocket_client.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_network.vcxproj]
+  (compiling source file '../src/network/websocket_client.cpp')
+  
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+  rest_client.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_network.vcxproj]
+  (compiling source file '../src/network/rest_client.cpp')
+  
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+  rate_limiter.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_network.vcxproj]
+  (compiling source file '../src/network/rate_limiter.cpp')
+  
+  opus_network.vcxproj -> C:\Users\furka\Desktop\opus_trade_bot\build\Release\opus_network.lib
+  Building Custom Rule C:/Users/furka/Desktop/opus_trade_bot/CMakeLists.txt
+  client.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+  (compiling source file '../src/exchange/binance/client.cpp')
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(52,25): error C2838: 'StopLoss': illegal qualified name in member declaration [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(52,25): error C2065: 'StopLoss': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(52,25): error C2131: expression did not evaluate to a constant [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(52,25):
+      a non-constant (sub-)expression was encountered
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(53,25): error C2838: 'StopLossLimit': illegal qualified name in member declaration [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(53,25): error C2065: 'StopLossLimit': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(53,25): error C2131: expression did not evaluate to a constant [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(53,25):
+      a non-constant (sub-)expression was encountered
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(55,25): error C2838: 'TakeProfitLimit': illegal qualified name in member declaration [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(55,25): error C2065: 'TakeProfitLimit': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(55,25): error C2131: expression did not evaluate to a constant [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(55,25):
+      a non-constant (sub-)expression was encountered
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(52,25): error C2051: case expression not constant [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(53,25): error C2051: case expression not constant [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(55,25): error C2051: case expression not constant [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(239,76): error C2838: 'StopLossLimit': illegal qualified name in member declaration [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(239,76): error C2065: 'StopLossLimit': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(240,40): error C2838: 'TakeProfitLimit': illegal qualified name in member declaration [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(240,40): error C2065: 'TakeProfitLimit': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(245,40): error C2838: 'StopLoss': illegal qualified name in member declaration [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(245,40): error C2065: 'StopLoss': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(245,79): error C2838: 'StopLossLimit': illegal qualified name in member declaration [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(245,79): error C2065: 'StopLossLimit': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(246,81): error C2838: 'TakeProfitLimit': illegal qualified name in member declaration [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(246,81): error C2065: 'TakeProfitLimit': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(282,43): error C2838: 'DELETE': illegal qualified name in member declaration [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(282,43): error C2065: 'DELETE': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(294,43): error C2838: 'DELETE': illegal qualified name in member declaration [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(294,43): error C2065: 'DELETE': undeclared identifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(400,46): error C2039: 'from_millis': is not a member of 'std::chrono::time_point<std::chrono::system_clock,std::chrono::nanoseconds>' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_chrono.hpp(200,11):
+      see declaration of 'std::chrono::time_point<std::chrono::system_clock,std::chrono::nanoseconds>'
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(400,46): error C3861: 'from_millis': identifier not found [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(412,47): error C2039: 'from_millis': is not a member of 'std::chrono::time_point<std::chrono::system_clock,std::chrono::nanoseconds>' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_chrono.hpp(200,11):
+      see declaration of 'std::chrono::time_point<std::chrono::system_clock,std::chrono::nanoseconds>'
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(412,47): error C3861: 'from_millis': identifier not found [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(449,32): error C2280: 'simdjson::simdjson_result<simdjson::fallback::ondemand::document> simdjson::fallback::ondemand::parser::iterate(simdjson::padded_string &&) noexcept &': attempting to reference a deleted function [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\simdjson.h(51320,50):
+      see declaration of 'simdjson::fallback::ondemand::parser::iterate'
+      C:\Users\furka\Desktop\opus_trade_bot\build\vcpkg_installed\x64-windows\include\simdjson.h(51320,50):
+      'simdjson::simdjson_result<simdjson::fallback::ondemand::document> simdjson::fallback::ondemand::parser::iterate(simdjson::padded_string &&) noexcept &': function was explicitly deleted
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(453,17): error C2664: 'void opus::exchange::binance::BinanceClient::Impl::handle_depth_update(simdjson::fallback::ondemand::document &,opus::exchange::binance::BinanceClient *)': cannot convert argument 1 from 'simdjson::simdjson_result<simdjson::fallback::ondemand::document>' to 'simdjson::fallback::ondemand::document &' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(464,10):
+      see declaration of 'opus::exchange::binance::BinanceClient::Impl::handle_depth_update'
+      C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(453,17):
+      while trying to match the argument list '(simdjson::simdjson_result<simdjson::fallback::ondemand::document>, opus::exchange::binance::BinanceClient *)'
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(455,17): error C2664: 'void opus::exchange::binance::BinanceClient::Impl::handle_trade_update(simdjson::fallback::ondemand::document &,opus::exchange::binance::BinanceClient *)': cannot convert argument 1 from 'simdjson::simdjson_result<simdjson::fallback::ondemand::document>' to 'simdjson::fallback::ondemand::document &' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(497,10):
+      see declaration of 'opus::exchange::binance::BinanceClient::Impl::handle_trade_update'
+      C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(455,17):
+      while trying to match the argument list '(simdjson::simdjson_result<simdjson::fallback::ondemand::document>, opus::exchange::binance::BinanceClient *)'
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(457,17): error C2664: 'void opus::exchange::binance::BinanceClient::Impl::handle_kline_update(simdjson::fallback::ondemand::document &,opus::exchange::binance::BinanceClient *)': cannot convert argument 1 from 'simdjson::simdjson_result<simdjson::fallback::ondemand::document>' to 'simdjson::fallback::ondemand::document &' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+      C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(515,10):
+      see declaration of 'opus::exchange::binance::BinanceClient::Impl::handle_kline_update'
+      C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(457,17):
+      while trying to match the argument list '(simdjson::simdjson_result<simdjson::fallback::ondemand::document>, opus::exchange::binance::BinanceClient *)'
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(474,40): error C2039: 'from_millis': is not a member of 'std::chrono::time_point<std::chrono::system_clock,std::chrono::nanoseconds>' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_chrono.hpp(200,11):
+      see declaration of 'std::chrono::time_point<std::chrono::system_clock,std::chrono::nanoseconds>'
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(474,40): error C3861: 'from_millis': identifier not found [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(510,40): error C2039: 'from_millis': is not a member of 'std::chrono::time_point<std::chrono::system_clock,std::chrono::nanoseconds>' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_chrono.hpp(200,11):
+      see declaration of 'std::chrono::time_point<std::chrono::system_clock,std::chrono::nanoseconds>'
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(510,40): error C3861: 'from_millis': identifier not found [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(528,45): error C2039: 'from_millis': is not a member of 'std::chrono::time_point<std::chrono::system_clock,std::chrono::nanoseconds>' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_chrono.hpp(200,11):
+      see declaration of 'std::chrono::time_point<std::chrono::system_clock,std::chrono::nanoseconds>'
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(528,45): error C3861: 'from_millis': identifier not found [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(529,46): error C2039: 'from_millis': is not a member of 'std::chrono::time_point<std::chrono::system_clock,std::chrono::nanoseconds>' [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\__msvc_chrono.hpp(200,11):
+      see declaration of 'std::chrono::time_point<std::chrono::system_clock,std::chrono::nanoseconds>'
+  
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(529,46): error C3861: 'from_millis': identifier not found [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(697,10): error C3861: 'EVP_sha256': identifier not found [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\src\exchange\binance\client.cpp(697,5): error C3861: 'HMAC': identifier not found [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+  auth.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+  (compiling source file '../src/exchange/binance/auth.cpp')
+  
+  market_data.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_exchange.vcxproj]
+  (compiling source file '../src/exchange/binance/market_data.cpp')
+  
+  Building Custom Rule C:/Users/furka/Desktop/opus_trade_bot/CMakeLists.txt
+  order_book.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_market.vcxproj]
+  (compiling source file '../src/market/order_book.cpp')
+  
+  kline.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_market.vcxproj]
+  (compiling source file '../src/market/kline.cpp')
+  
+  ticker.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_market.vcxproj]
+  (compiling source file '../src/market/ticker.cpp')
+  
+  binary_writer.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_market.vcxproj]
+  (compiling source file '../src/market/binary_writer.cpp')
+  
+  opus_market.vcxproj -> C:\Users\furka\Desktop\opus_trade_bot\build\Release\opus_market.lib
+  Building Custom Rule C:/Users/furka/Desktop/opus_trade_bot/CMakeLists.txt
+  rsi.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_strategy.vcxproj]
+  (compiling source file '../src/strategy/indicators/rsi.cpp')
+  
+  macd.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_strategy.vcxproj]
+  (compiling source file '../src/strategy/indicators/macd.cpp')
+  
+  bollinger.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_strategy.vcxproj]
+  (compiling source file '../src/strategy/indicators/bollinger.cpp')
+  
+  ema.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_strategy.vcxproj]
+  (compiling source file '../src/strategy/indicators/ema.cpp')
+  
+  order_book_imbalance.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_strategy.vcxproj]
+  (compiling source file '../src/strategy/order_book_imbalance.cpp')
+  
+  signal_generator.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\opus_strategy.vcxproj]
+  (compiling source file '../src/strategy/signal_generator.cpp')
+  
+  opus_strategy.vcxproj -> C:\Users\furka\Desktop\opus_trade_bot\build\Release\opus_strategy.lib
+  Building Custom Rule C:/Users/furka/Desktop/opus_trade_bot/tests/CMakeLists.txt
+  test_types.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+  (compiling source file '../../tests/unit/test_types.cpp')
+  
+  test_memory_pool.cpp
+  test_ring_buffer.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\ring_buffer.hpp(173,1): warning C4324: 'opus::SPSCRingBuffer<TestMessage,64>': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+  (compiling source file '../../tests/unit/test_ring_buffer.cpp')
+      C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\ring_buffer.hpp(173,1):
+      the template instantiation context (the oldest one first) is
+          C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(26,43):
+          see reference to class template instantiation 'opus::SPSCRingBuffer<TestMessage,64>' being compiled
+  
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\ring_buffer.hpp(176,44): warning C4324: 'opus::SPSCRingBuffer<TestMessage,64>': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+  (compiling source file '../../tests/unit/test_ring_buffer.cpp')
+  
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(51,24): warning C4834: discarding return value of function with [[nodiscard]] attribute [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(75,28): warning C4834: discarding return value of function with [[nodiscard]] attribute [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(78,20): warning C4834: discarding return value of function with [[nodiscard]] attribute [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(87,24): warning C4834: discarding return value of function with [[nodiscard]] attribute [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+C:\Users\furka\Desktop\opus_trade_bot\tests\unit\test_ring_buffer.cpp(160,24): warning C4834: discarding return value of function with [[nodiscard]] attribute [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_core.vcxproj]
+  Generating code
+  Finished generating code
+  test_core.vcxproj -> C:\Users\furka\Desktop\opus_trade_bot\build\tests\Release\test_core.exe
+  Building Custom Rule C:/Users/furka/Desktop/opus_trade_bot/tests/CMakeLists.txt
+  test_order_book.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_market.vcxproj]
+  (compiling source file '../../tests/unit/test_order_book.cpp')
+  
+  Generating code
+  Finished generating code
+  test_market.vcxproj -> C:\Users\furka\Desktop\opus_trade_bot\build\tests\Release\test_market.exe
+  Building Custom Rule C:/Users/furka/Desktop/opus_trade_bot/tests/CMakeLists.txt
+  test_rsi.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_strategy.vcxproj]
+  (compiling source file '../../tests/unit/test_rsi.cpp')
+  
+  test_macd.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_strategy.vcxproj]
+  (compiling source file '../../tests/unit/test_macd.cpp')
+  
+  test_bollinger.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_strategy.vcxproj]
+  (compiling source file '../../tests/unit/test_bollinger.cpp')
+  
+  test_order_book_imbalance.cpp
+C:\Users\furka\Desktop\opus_trade_bot\include\opus\core\types.hpp(214,1): warning C4324: 'opus::PriceLevel': structure was padded due to alignment specifier [C:\Users\furka\Desktop\opus_trade_bot\build\tests\test_strategy.vcxproj]
+  (compiling source file '../../tests/unit/test_order_book_imbalance.cpp')
+  
+  Generating code
+  Finished generating code
+  test_strategy.vcxproj -> C:\Users\furka\Desktop\opus_trade_bot\build\tests\Release\test_strategy.exe

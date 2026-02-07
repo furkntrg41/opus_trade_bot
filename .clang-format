@@ -1,0 +1,104 @@
+# Opus Trade Bot - Clang Format Configuration
+# Based on Google C++ Style Guide with HFT-specific modifications
+
+Language: Cpp
+Standard: c++20
+BasedOnStyle: Google
+
+# Indentation
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+IndentCaseLabels: true
+IndentPPDirectives: BeforeHash
+NamespaceIndentation: None
+
+# Braces
+BreakBeforeBraces: Attach
+Cpp11BracedListStyle: true
+InsertBraces: true
+
+# Line Length
+ColumnLimit: 100
+
+# Alignment
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveDeclarations: None
+AlignConsecutiveMacros: Consecutive
+AlignEscapedNewlines: Left
+AlignOperands: Align
+AlignTrailingComments: true
+
+# Line Breaks
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: Inline
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterReturnType: None
+AlwaysBreakTemplateDeclarations: Yes
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBinaryOperators: None
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializers: BeforeColon
+BreakInheritanceList: BeforeColon
+
+# Spaces
+SpaceAfterCStyleCast: false
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceInEmptyParentheses: false
+SpacesBeforeTrailingComments: 2
+SpacesInAngles: Never
+SpacesInCStyleCastParentheses: false
+SpacesInContainerLiterals: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# Includes
+IncludeBlocks: Regroup
+IncludeCategories:
+  # Project headers
+  - Regex: '^"opus/'
+    Priority: 1
+  # Third-party headers
+  - Regex: '^<(boost|simdjson|spdlog|absl)/'
+    Priority: 2
+  # System headers
+  - Regex: '^<[a-z_]+>'
+    Priority: 3
+  # Other
+  - Regex: '.*'
+    Priority: 4
+SortIncludes: CaseSensitive
+
+# Misc
+FixNamespaceComments: true
+MaxEmptyLinesToKeep: 1
+PointerAlignment: Left
+ReflowComments: true
+SortUsingDeclarations: true
+
+# Keep short accessors short
+AccessModifierOffset: -4
+EmptyLineBeforeAccessModifier: Always
+EmptyLineAfterAccessModifier: Never
+
+# Penalties
+PenaltyBreakAssignment: 2
+PenaltyBreakBeforeFirstCallParameter: 1
+PenaltyBreakComment: 300
+PenaltyBreakFirstLessLess: 120
+PenaltyBreakString: 1000
+PenaltyExcessCharacter: 1000000
+PenaltyReturnTypeOnItsOwnLine: 200

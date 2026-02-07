@@ -1,0 +1,17 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+    "name": "opus-trade-bot",
+    "version": "1.0.0",
+    "description": "Professional C++20 Algorithmic Trading Bot for Binance Futures",
+    "dependencies": [
+        "boost-asio",
+        "boost-beast",
+        "boost-system",
+        "simdjson",
+        "spdlog",
+        "abseil",
+        "openssl",
+        "yaml-cpp",
+        "gtest"
+    ]
+}

@@ -1,0 +1,25 @@
+# Binance API Configuration (Example)
+# Rename to config.yaml and fill in your keys
+
+api_key: "YOUR_API_KEY_HERE"
+secret_key: "YOUR_SECRET_KEY_HERE"
+
+# Environment
+testnet: true  # Set to false for Mainnet
+
+# Strategy Settings
+symbol: "BTCUSDT"
+
+# Signal Filter
+signal_filter:
+  imbalance_threshold: 0.6
+  high_conviction_threshold: 0.7
+  confirmation_ticks: 3
+  cooldown_seconds: 30
+
+# Risk Management
+risk:
+  stop_loss_pct: 0.25
+  take_profit_pct: 0.50
+  max_position_usd: 100
+  max_daily_loss_usd: 50
