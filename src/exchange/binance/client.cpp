@@ -155,7 +155,8 @@ struct BinanceClient::Impl {
             auto doc = parser_.iterate(response.body);
             for (auto position : doc.get_array()) {
                 double qty = std::stod(std::string(position["positionAmt"].get_string().value()));
-                if (qty == 0) continue;  // Skip empty positions
+                // Use epsilon for float comparison (User Request: "Tuzak 2")
+                if (std::abs(qty) < 1e-7) continue;  // Skip empty/dust positions
 
                 PositionInfo info;
                 info.symbol = Symbol(position["symbol"].get_string().value());

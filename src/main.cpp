@@ -12,6 +12,7 @@
 #include "opus/strategy/signal_filter.hpp"
 #include "opus/risk/risk_manager.hpp"
 #include "opus/order/order_manager.hpp"
+#include "opus/order/position_tracker.hpp"
 
 #include <yaml-cpp/yaml.h>
 
@@ -127,8 +128,10 @@ public:
         binance_config.testnet = config.testnet;
         
         
+        
         client_ = std::make_unique<exchange::binance::BinanceClient>(binance_config);
         order_manager_ = std::make_unique<order::OrderManager>(*client_);
+        position_tracker_ = std::make_unique<order::PositionTracker>(*client_);
     }
     
     bool start() {
@@ -164,6 +167,10 @@ public:
         
         // Wait for WebSocket to connect (max 5 seconds)
         std::cout << "[INFO] Waiting for WebSocket handshake...\n";
+        std::cout << "[INFO] Press Ctrl+C to stop\n";
+        
+        // Wait for WebSocket to connect (max 5 seconds)
+        std::cout << "[INFO] Waiting for WebSocket handshake...\n";
         for (int i = 0; i < 50 && !client_->is_connected(); ++i) {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
@@ -193,6 +200,7 @@ public:
         using namespace std::chrono;
         
         auto last_print = steady_clock::now();
+        auto last_poll_time = steady_clock::now();
         
         while (g_running) {
             auto now_time = steady_clock::now();
@@ -201,6 +209,17 @@ public:
             if (duration_cast<seconds>(now_time - last_print).count() >= 5) {
                 print_stats();
                 last_print = now_time;
+            }
+
+            // Smart Polling: Sync positions every 2 seconds IF we think we have exposure
+            if (duration_cast<seconds>(now_time - last_poll_time).count() >= 2) {
+                if (risk_manager_->open_positions() > 0 || position_tracker_->has_open_position()) {
+                    if (position_tracker_->sync_with_exchange()) {
+                        risk_manager_->on_position_closed(0.0); // PnL is approx/unknown for now
+                        std::cout << "[TRACKER] Position Closed (Sync).\n";
+                    }
+                }
+                last_poll_time = now_time;
             }
             
             // Small sleep - main work done in WebSocket callback thread
@@ -427,6 +446,7 @@ private:
     std::unique_ptr<strategy::SignalFilter> signal_filter_;
     std::unique_ptr<risk::RiskManager> risk_manager_;
     std::unique_ptr<order::OrderManager> order_manager_;
+    std::unique_ptr<order::PositionTracker> position_tracker_;
     
     // State
     double last_imbalance_ = 0.0;
