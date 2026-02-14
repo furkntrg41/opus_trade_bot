@@ -107,7 +107,7 @@ public:
 
 class RiskManager {
 public:
-    explicit RiskManager(const RiskConfig& config = {}) : config_(config) {}
+    explicit RiskManager(const RiskConfig& config = RiskConfig{}) : config_(config) {}
 
     // ========================================================================
     // Pre-Trade Checks

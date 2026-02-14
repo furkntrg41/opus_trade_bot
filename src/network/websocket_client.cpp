@@ -122,8 +122,15 @@ struct WebSocketClient::Impl {
         // Set timeout FOR WebSocket handshake (not expires_never!)
         beast::get_lowest_layer(*ws_).expires_after(std::chrono::seconds(10));
 
-        // Set WebSocket options
-        ws_->set_option(websocket::stream_base::timeout::suggested(beast::role_type::client));
+        // Set WebSocket options — Beast handles ping/pong internally
+        // idle_timeout = 5 min (Binance closes idle WS after ~5 min)
+        // keep_alive_pings = true → Beast sends pings at idle_timeout/2
+        // NO manual start_ping_timer — that caused double-ping conflicts
+        websocket::stream_base::timeout ws_timeout;
+        ws_timeout.handshake_timeout = config_.connect_timeout;
+        ws_timeout.idle_timeout = std::chrono::minutes(5);
+        ws_timeout.keep_alive_pings = true;
+        ws_->set_option(ws_timeout);
         ws_->set_option(websocket::stream_base::decorator(
             [](websocket::request_type& req) {
                 req.set(http::field::user_agent, "OpusTrade/1.0");
@@ -157,16 +164,15 @@ struct WebSocketClient::Impl {
             self->on_connect_();
         }
 
-        // Disable timeout for persistent reads - WebSocket handles its own ping/pong
+        // Disable TCP-level timeout; Beast WS timeout (set in on_ssl_handshake)
+        // handles idle detection + keep-alive pings internally
         beast::get_lowest_layer(*ws_).expires_never();
         
         // Start reading
         do_read(self);
 
-        // Start ping timer if enabled
-        if (config_.enable_ping) {
-            start_ping_timer(self);
-        }
+        // NOTE: No manual start_ping_timer here!
+        // Beast's keep_alive_pings handles ping/pong automatically.
     }
 
     void do_read(WebSocketClient* self) {
@@ -185,6 +191,14 @@ struct WebSocketClient::Impl {
                 if (self->on_disconnect_) {
                     self->on_disconnect_();
                 }
+                maybe_reconnect(self);
+                return;
+            }
+
+            // Handle timeout (idle connection) gracefully
+            if (ec == beast::error::timeout) {
+                std::cerr << "[WS_INFO] Connection idle/timed out, reconnecting..." << std::endl;
+                self->connected_ = false;
                 maybe_reconnect(self);
                 return;
             }
@@ -250,16 +264,9 @@ struct WebSocketClient::Impl {
         do_write(self);
     }
 
-    void start_ping_timer(WebSocketClient* self) {
-        ping_timer_ = std::make_unique<net::steady_timer>(io_context_);
-        ping_timer_->expires_after(config_.ping_interval);
-        ping_timer_->async_wait([this, self](beast::error_code ec) {
-            if (!ec && self->connected_) {
-                ws_->async_ping({}, [this, self](beast::error_code) {
-                    start_ping_timer(self);
-                });
-            }
-        });
+    void start_ping_timer(WebSocketClient* /*self*/) {
+        // NO-OP: Beast's built-in keep_alive_pings handles ping/pong.
+        // This method is kept for ABI compatibility.
     }
 
     void disconnect() {
@@ -271,15 +278,31 @@ struct WebSocketClient::Impl {
 
     void maybe_reconnect(WebSocketClient* self) {
         if (!config_.auto_reconnect || !self->running_) return;
-        if (reconnect_attempts_ >= config_.max_reconnect_attempts) {
-            handle_error("Max reconnect attempts reached", self);
+        if (config_.max_reconnect_attempts > 0 &&
+            reconnect_attempts_ >= config_.max_reconnect_attempts) {
+            handle_error("Max reconnect attempts reached (" +
+                         std::to_string(reconnect_attempts_) + ")", self);
             return;
         }
 
         ++reconnect_attempts_;
 
+        // Exponential backoff: base * 2^(attempt-1), capped at max_delay
+        auto base = config_.reconnect_delay.count();
+        auto exp = std::min<int64_t>(base << (reconnect_attempts_ - 1),
+                                     config_.max_reconnect_delay.count());
+        auto delay = std::chrono::seconds(exp);
+
+        std::cerr << "[WS_RECONNECT] Attempt " << reconnect_attempts_
+                  << " in " << delay.count() << "s" << std::endl;
+
+        // Fire reconnect callback (for Telegram notification etc.)
+        if (self->on_reconnect_) {
+            self->on_reconnect_(reconnect_attempts_, delay);
+        }
+
         reconnect_timer_ = std::make_unique<net::steady_timer>(io_context_);
-        reconnect_timer_->expires_after(config_.reconnect_delay);
+        reconnect_timer_->expires_after(delay);
         reconnect_timer_->async_wait([this, self](beast::error_code ec) {
             if (!ec && self->running_) {
                 connect(self);

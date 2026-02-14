@@ -36,8 +36,41 @@ bool PositionTracker::sync_with_exchange() {
         if (!found) {
             std::cout << "[TRACKER] Detected closure for " << old_pos.symbol.view() << "\n";
             any_closed = true;
-            // In a real system, we would calculate realized PnL here
-            // using the last known unrealized PnL or trade history
+            
+            // Calculate Realized PnL by fetching recent trades
+            try {
+                auto trades = client_.get_account_trades(old_pos.symbol, 5);
+                double total_pnl = 0.0;
+                double total_commission = 0.0;
+                
+                // Filter trades that likely belong to this closure (last 10 seconds)
+                // Note: ideally we would match order IDs, but time-based approximation works for MVP
+                auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+                ).count();
+                
+                for (const auto& trade : trades) {
+                    // Check if trade happened in last 30 seconds
+                    int64_t trade_time_ms = opus::to_epoch_ms(trade.time);
+                    if (now_ms - trade_time_ms < 30000) { 
+                        total_pnl += trade.realized_pnl;
+                        total_commission += trade.commission; // Commission usually negative in PnL or separate?
+                                                              // Binance PnL usually is net? No, userTrades has separate commission.
+                                                              // RealizedPnl from Binance is usually Gross PnL.
+                    }
+                }
+                
+                // Net PnL = Realized PnL - Commission (approximate if assets differ)
+                // Note: Commission is often in BNB or Quote asset. Assuming Quote (USDT) for simplicity or ignoring for MVP.
+                // Let's stick to realizedPnl from Binance which is the trading profit.
+                last_realized_pnl_ = total_pnl; 
+                
+                std::cout << "[TRACKER] Calculated PnL: " << last_realized_pnl_ << "\n";
+                
+            } catch (const std::exception& e) {
+                std::cerr << "[TRACKER] Failed to calculate PnL: " << e.what() << "\n";
+                last_realized_pnl_ = 0.0;
+            }
         }
     }
     

@@ -11,8 +11,10 @@
 #include <openssl/evp.h>
 
 #include <iomanip>
+#include <cmath>
 #include <mutex>
 #include <sstream>
+#include <thread>
 #include <unordered_map>
 
 namespace opus::exchange::binance {
@@ -53,8 +55,8 @@ static std::string order_type_to_string(OrderType type) {
         case OrderType::Market: return "MARKET";
         case OrderType::StopMarket: return "STOP_MARKET";
         case OrderType::StopLimit: return "STOP";
-        case OrderType::TakeProfit: return "TAKE_PROFIT_MARKET";
-        case OrderType::TakeProfitMarket: return "TAKE_PROFIT";
+        case OrderType::TakeProfit: return "TAKE_PROFIT";
+        case OrderType::TakeProfitMarket: return "TAKE_PROFIT_MARKET";
         default: return "MARKET";
     }
 }
@@ -89,6 +91,10 @@ struct BinanceClient::Impl {
     // State
     std::atomic<bool> connected_{false};
     std::mutex callback_mutex_;
+    std::string last_error_;
+
+    // Track active subscriptions for re-subscribe on reconnect
+    std::vector<std::string> active_subscriptions_;
 
     explicit Impl(const BinanceConfig& config) : config_(config) {
         // Initialize REST client
@@ -106,6 +112,8 @@ struct BinanceClient::Impl {
         ws_config.host = "fstream.binance.com";  // Public market data stream
         ws_config.port = "443";
         ws_config.path = "/ws";  // Will subscribe via JSON message
+        ws_config.ping_interval = std::chrono::minutes(3);
+        ws_config.connect_timeout = std::chrono::seconds(20);
 
         ws_client_ = std::make_unique<network::WebSocketClient>(ws_config);
     }
@@ -126,7 +134,8 @@ struct BinanceClient::Impl {
         }
 
         try {
-            auto doc = parser_.iterate(response.body);
+            simdjson::padded_string padded(response.body);
+            auto doc = parser_.iterate(padded);
             AccountInfo info;
             info.total_wallet_balance = std::stod(std::string(doc["totalWalletBalance"].get_string().value()));
             info.available_balance = std::stod(std::string(doc["availableBalance"].get_string().value()));
@@ -152,7 +161,8 @@ struct BinanceClient::Impl {
         }
 
         try {
-            auto doc = parser_.iterate(response.body);
+            simdjson::padded_string padded(response.body);
+            auto doc = parser_.iterate(padded);
             for (auto position : doc.get_array()) {
                 double qty = std::stod(std::string(position["positionAmt"].get_string().value()));
                 // Use epsilon for float comparison (User Request: "Tuzak 2")
@@ -186,6 +196,53 @@ struct BinanceClient::Impl {
         return std::nullopt;
     }
 
+    std::vector<AccountTrade> get_account_trades(const Symbol& symbol, int limit) {
+        std::vector<AccountTrade> trades;
+
+        network::HttpRequest req;
+        req.method = network::HttpMethod::GET;
+        req.path = "/fapi/v1/userTrades";
+        req.sign = true;
+
+        if (!symbol.empty()) {
+            req.query_params["symbol"] = std::string(symbol.view());
+        }
+        if (limit > 0) {
+            req.query_params["limit"] = std::to_string(limit);
+        }
+
+        auto response = rest_client_->request(req);
+        if (!response.is_success()) {
+            return trades;
+        }
+
+        try {
+            simdjson::padded_string padded(response.body);
+            auto doc = parser_.iterate(padded);
+            for (auto trade : doc.get_array()) {
+                AccountTrade info;
+                info.id = trade["id"].get_int64().value();
+                info.symbol = Symbol(trade["symbol"].get_string().value());
+                info.order_id = trade["orderId"].get_int64().value();
+                info.side = parse_side(trade["side"].get_string().value());
+                info.price = parse_price(trade["price"].get_string().value());
+                info.quantity = parse_quantity(trade["qty"].get_string().value());
+                info.realized_pnl = std::stod(std::string(trade["realizedPnl"].get_string().value()));
+                info.commission = std::stod(std::string(trade["commission"].get_string().value()));
+                info.commission_asset = std::string(trade["commissionAsset"].get_string().value());
+                info.time = opus::from_epoch_ms(trade["time"].get_int64().value());
+                info.is_buyer = trade["buyer"].get_bool().value();
+                info.is_maker = trade["maker"].get_bool().value();
+
+                trades.push_back(std::move(info));
+            }
+        } catch (...) {
+            // Parse error
+        }
+
+        return trades;
+    }
+
     std::vector<OrderInfo> get_open_orders(const Symbol& symbol) {
         std::vector<OrderInfo> orders;
 
@@ -204,7 +261,8 @@ struct BinanceClient::Impl {
         }
 
         try {
-            auto doc = parser_.iterate(response.body);
+            simdjson::padded_string padded(response.body);
+            auto doc = parser_.iterate(padded);
             for (auto order : doc.get_array()) {
                 OrderInfo info;
                 info.order_id = order["orderId"].get_int64().value();
@@ -225,57 +283,179 @@ struct BinanceClient::Impl {
         return orders;
     }
 
+    // Helper for formatting doubles
+    std::string format_number(double val) {
+        std::ostringstream oss;
+        oss << std::fixed << std::setprecision(8) << val;
+        std::string s = oss.str();
+        // Remove trailing zeros
+        s.erase(s.find_last_not_of('0') + 1, std::string::npos);
+        // Remove trailing dot if exists
+        if (!s.empty() && s.back() == '.') {
+            s.pop_back();
+        }
+        return s;
+    }
+
     std::optional<OrderInfo> place_order(const OrderRequest& request) {
+        // Binance migrated conditional orders to Algo Service (Dec 2025)
+        // STOP_MARKET and TAKE_PROFIT_MARKET must use /fapi/v1/algoOrder
+        bool is_algo = (request.type == OrderType::StopMarket ||
+                        request.type == OrderType::TakeProfitMarket);
+
         network::HttpRequest req;
         req.method = network::HttpMethod::POST;
-        req.path = "/fapi/v1/order";
+        req.path = is_algo ? "/fapi/v1/algoOrder" : "/fapi/v1/order";
+        
+        // DEBUG LOGGING
+        {
+            std::ostringstream ds;
+            ds << "[DEBUG] Placing Order: " << order_type_to_string(request.type) 
+               << " " << side_to_string(request.side) 
+               << " Qty:" << std::fixed << std::setprecision(4) << request.quantity.to_double()
+               << " Path:" << req.path << "\n";
+            std::cerr << ds.str();
+        }
+
         req.sign = true;
 
         req.query_params["symbol"] = std::string(request.symbol.view());
         req.query_params["side"] = side_to_string(request.side);
         req.query_params["type"] = order_type_to_string(request.type);
-        req.query_params["quantity"] = std::to_string(request.quantity.to_double());
+        
+        // Algo orders require algoType=CONDITIONAL
+        if (is_algo) {
+            req.query_params["algoType"] = "CONDITIONAL";
+        }
+        
+        if (!request.close_position) {
+            req.query_params["quantity"] = format_number(request.quantity.to_double());
+        }
 
         if (request.type == OrderType::Limit || request.type == OrderType::StopLimit ||
-            request.type == OrderType::TakeProfitMarket) {
-            req.query_params["price"] = std::to_string(request.price.to_double());
+            request.type == OrderType::TakeProfit) {
+            req.query_params["price"] = format_number(request.price.to_double());
             req.query_params["timeInForce"] = tif_to_string(request.time_in_force);
         }
-
-        if (request.type == OrderType::StopMarket || request.type == OrderType::StopLimit ||
-            request.type == OrderType::TakeProfit || request.type == OrderType::TakeProfitMarket) {
-            req.query_params["stopPrice"] = std::to_string(request.stop_price.to_double());
+        
+        // Algo orders use "triggerPrice", regular orders use "stopPrice"
+        if (request.type == OrderType::StopMarket || request.type == OrderType::TakeProfitMarket ||
+            request.type == OrderType::StopLimit || request.type == OrderType::TakeProfit) {
+            if (request.stop_price.is_valid()) {
+                if (is_algo) {
+                    req.query_params["triggerPrice"] = format_number(request.stop_price.to_double());
+                } else {
+                    req.query_params["stopPrice"] = format_number(request.stop_price.to_double());
+                }
+            }
         }
-
         if (!request.client_order_id.empty()) {
-            req.query_params["newClientOrderId"] = request.client_order_id;
+            if (is_algo) {
+                req.query_params["clientAlgoId"] = request.client_order_id;
+            } else {
+                req.query_params["newClientOrderId"] = request.client_order_id;
+            }
         }
 
-        if (request.reduce_only) {
+        if (request.close_position) {
+            req.query_params["closePosition"] = "true";
+            // Note: reduceOnly cannot be used with closePosition
+        } else if (request.reduce_only) {
             req.query_params["reduceOnly"] = "true";
         }
 
+        last_error_.clear();
         auto response = rest_client_->request(req);
         if (!response.is_success()) {
+            std::ostringstream details;
+            details << "Order failed (" << response.status_code << "): " << response.body
+                    << " | qty=" << request.quantity.to_double();
+            if (request.price.is_valid()) {
+                details << " price=" << request.price.to_double();
+            }
+            if (request.stop_price.is_valid()) {
+                details << " stop=" << request.stop_price.to_double();
+            }
+            last_error_ = details.str();
+            if (last_error_.size() > 512) last_error_.resize(512);
             return std::nullopt;
         }
 
         try {
-            auto doc = parser_.iterate(response.body);
+            // simdjson on-demand requires padded string
+            simdjson::padded_string padded(response.body);
+            auto doc = parser_.iterate(padded);
             OrderInfo info;
-            info.order_id = doc["orderId"].get_int64().value();
-            info.client_order_id = std::string(doc["clientOrderId"].get_string().value());
-            info.symbol = request.symbol;
-            info.side = request.side;
-            info.status = parse_order_status(doc["status"].get_string().value());
-            info.price = parse_price(doc["price"].get_string().value());
-            info.quantity = request.quantity;
-            info.executed_qty = parse_quantity(doc["executedQty"].get_string().value());
+
+            if (is_algo) {
+                // Algo Order response uses algoId/clientAlgoId
+                info.order_id = doc["algoId"].get_int64().value();
+                auto client_id = doc["clientAlgoId"];
+                info.client_order_id = std::string(client_id.get_string().value());
+                info.symbol = request.symbol;
+                info.side = request.side;
+                info.status = OrderStatus::New;
+                info.price = request.stop_price;
+                info.quantity = request.quantity;
+                info.executed_qty = Quantity::from_double(0.0);
+                std::cerr << "[ORDER] Algo Order placed: algoId=" << info.order_id << "\n";
+            } else {
+                // Regular Order response
+                // IMPORTANT: simdjson on-demand is FORWARD-ONLY.
+                // Read fields in the exact order they appear in Binance JSON:
+                // orderId → symbol → status → clientOrderId → price → avgPrice → origQty → executedQty
+                info.order_id = doc["orderId"].get_int64().value();
+                // skip symbol (we already have it from request)
+                auto status_field = doc["status"].get_string().value();
+                info.status = parse_order_status(status_field);
+                info.client_order_id = std::string(doc["clientOrderId"].get_string().value());
+                
+                // Read price fields in document order
+                auto price_str = doc["price"].get_string().value();
+                auto avg_price_str = doc["avgPrice"].get_string().value();
+                
+                // Skip origQty (use request quantity)
+                info.executed_qty = parse_quantity(doc["executedQty"].get_string().value());
+                
+                info.symbol = request.symbol;
+                info.side = request.side;
+                info.quantity = request.quantity;
+                
+                // Resolve fill price: prefer avgPrice > price > trade lookup
+                double avg_val = std::stod(std::string(avg_price_str));
+                double price_val = std::stod(std::string(price_str));
+                if (avg_val > 0) {
+                    info.price = Price::from_double(avg_val);
+                } else if (price_val > 0) {
+                    info.price = Price::from_double(price_val);
+                } else {
+                    // Fallback: query trade API
+                    info.price = resolve_fill_price_from_trades(request.symbol, info.order_id);
+                }
+            }
             return info;
-        } catch (...) {
+        } catch (const std::exception& e) {
+            last_error_ = std::string("Order parse error: ") + e.what();
+            std::cerr << "[DEBUG] " << last_error_ << " | body=" << response.body << "\n";
             return std::nullopt;
         }
     }
+
+private:
+    // Fallback: look up fill price from recent trades (gives Binance 50ms to propagate)
+    Price resolve_fill_price_from_trades(const Symbol& symbol, int64_t order_id) {
+        try {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            auto trades = get_account_trades(symbol, 5);
+            for (const auto& trade : trades) {
+                if (trade.order_id == order_id) {
+                    return trade.price;
+                }
+            }
+        } catch (...) {}
+        return Price::from_double(0.0);
+    }
+public:
 
     bool cancel_order(const Symbol& symbol, int64_t order_id) {
         network::HttpRequest req;
@@ -324,7 +504,8 @@ struct BinanceClient::Impl {
         }
 
         try {
-            auto doc = parser_.iterate(response.body);
+            simdjson::padded_string padded(response.body);
+            auto doc = parser_.iterate(padded);
             return parse_price(doc["price"].get_string().value());
         } catch (...) {
             return std::nullopt;
@@ -344,7 +525,8 @@ struct BinanceClient::Impl {
         }
 
         try {
-            auto doc = parser_.iterate(response.body);
+            simdjson::padded_string padded(response.body);
+            auto doc = parser_.iterate(padded);
 
             DepthUpdate update;
             update.symbol = symbol;
@@ -391,7 +573,8 @@ struct BinanceClient::Impl {
         }
 
         try {
-            auto doc = parser_.iterate(response.body);
+            simdjson::padded_string padded(response.body);
+            auto doc = parser_.iterate(padded);
             for (auto kline_arr : doc.get_array()) {
                 auto arr = kline_arr.get_array();
                 auto it = arr.begin();
@@ -425,12 +608,25 @@ struct BinanceClient::Impl {
     // ========================================================================
 
     void setup_websocket_handlers(BinanceClient* self) {
-        ws_client_->on_connect([this]() {
-            connected_ = true;
+        ws_client_->on_connect([this, self]() {
+            bool was_connected = connected_.exchange(true);
+            // Re-subscribe all streams on reconnection
+            if (was_connected || !active_subscriptions_.empty()) {
+                std::cerr << "[BINANCE] WS connected, re-subscribing "
+                          << active_subscriptions_.size() << " stream(s)\n";
+                for (const auto& msg : active_subscriptions_) {
+                    ws_client_->send(msg);
+                }
+            }
+            // Fire user connect callback (Telegram notification etc.)
+            if (self->on_ws_connect_) {
+                self->on_ws_connect_();
+            }
         });
 
-        ws_client_->on_disconnect([this]() {
+        ws_client_->on_disconnect([this, self]() {
             connected_ = false;
+            std::cerr << "[BINANCE] WS disconnected\n";
         });
 
         ws_client_->on_message([this, self](std::string_view message) {
@@ -547,8 +743,12 @@ struct BinanceClient::Impl {
             depth_callbacks_[std::string(symbol.view())] = std::move(callback);
         }
 
-        // Send subscribe message
+        // Send subscribe message (and track for re-subscribe on reconnect)
         std::string msg = R"({"method":"SUBSCRIBE","params":[")" + sym_lower + R"(@depth@100ms"],"id":1})";
+        {
+            std::lock_guard<std::mutex> lock2(callback_mutex_);
+            active_subscriptions_.push_back(msg);
+        }
         ws_client_->send(msg);
     }
 
@@ -562,6 +762,10 @@ struct BinanceClient::Impl {
         }
 
         std::string msg = R"({"method":"SUBSCRIBE","params":[")" + sym_lower + R"(@aggTrade"],"id":2})";
+        {
+            std::lock_guard<std::mutex> lock2(callback_mutex_);
+            active_subscriptions_.push_back(msg);
+        }
         ws_client_->send(msg);
     }
 
@@ -576,6 +780,10 @@ struct BinanceClient::Impl {
 
         std::string msg = R"({"method":"SUBSCRIBE","params":[")" + sym_lower + "@kline_" +
                           std::string(interval) + R"("],"id":3})";
+        {
+            std::lock_guard<std::mutex> lock2(callback_mutex_);
+            active_subscriptions_.push_back(msg);
+        }
         ws_client_->send(msg);
     }
 
@@ -601,6 +809,12 @@ struct BinanceClient::Impl {
     bool is_connected() const {
         return connected_ && ws_client_->is_connected();
     }
+
+    void set_reconnect_callback(IBinanceClient::ReconnectCallback cb) {
+        ws_client_->on_reconnect(std::move(cb));
+    }
+
+    [[nodiscard]] const std::string& last_error() const { return last_error_; }
 };
 
 // ============================================================================
@@ -630,8 +844,17 @@ std::vector<OrderInfo> BinanceClient::get_open_orders(const Symbol& symbol) {
     return impl_->get_open_orders(symbol);
 }
 
+std::vector<AccountTrade> BinanceClient::get_account_trades(const Symbol& symbol, int limit) {
+    return impl_->get_account_trades(symbol, limit);
+}
+
 std::optional<OrderInfo> BinanceClient::place_order(const OrderRequest& request) {
-    return impl_->place_order(request);
+    auto result = impl_->place_order(request);
+    if (!result && on_error_) {
+        const auto& err = impl_->last_error();
+        on_error_(err.empty() ? "Order request failed" : err);
+    }
+    return result;
 }
 
 bool BinanceClient::cancel_order(const Symbol& symbol, int64_t order_id) {
@@ -676,6 +899,14 @@ void BinanceClient::unsubscribe(const Symbol& symbol) {
 
 void BinanceClient::start() {
     impl_->start(this);
+}
+
+void BinanceClient::on_reconnect(ReconnectCallback callback) {
+    impl_->set_reconnect_callback(std::move(callback));
+}
+
+void BinanceClient::on_ws_connect(ConnectCallback callback) {
+    on_ws_connect_ = std::move(callback);
 }
 
 void BinanceClient::stop() {

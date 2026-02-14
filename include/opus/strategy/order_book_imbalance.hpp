@@ -103,8 +103,11 @@ public:
         size_t smoothing_period = 10;     // EMA smoothing for noise reduction
     };
 
-    explicit ImbalanceSignalGenerator(const Config& config = {})
+    explicit ImbalanceSignalGenerator(const Config& config)
         : config_(config), smoothed_imbalance_(0.0), sample_count_(0) {}
+
+    ImbalanceSignalGenerator()
+        : config_(), smoothed_imbalance_(0.0), sample_count_(0) {}
 
     /// Update with new order book data
     void update(std::span<const PriceLevel> bids, std::span<const PriceLevel> asks) {

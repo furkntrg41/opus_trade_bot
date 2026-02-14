@@ -7,6 +7,7 @@
 // Reduces ~1666 raw signals to 3-4 qualified trades per session
 // ============================================================================
 
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 
@@ -51,7 +52,7 @@ public:
         bool is_high_conviction = false;
     };
 
-    explicit SignalFilter(const SignalFilterConfig& config = {})
+    explicit SignalFilter(const SignalFilterConfig& config = SignalFilterConfig{})
         : config_(config) {}
     
     // ========================================================================

@@ -10,6 +10,7 @@
 #include <chrono>
 #include <cmath>
 #include <algorithm>
+#include <string>
 
 namespace opus::risk {
 
@@ -70,7 +71,7 @@ public:
         std::string reason;
     };
 
-    explicit RiskManager(const RiskConfig& config = {})
+    explicit RiskManager(const RiskConfig& config = RiskConfig{})
         : config_(apply_hardcoded_limits(config)) {
         reset_daily_stats();
     }

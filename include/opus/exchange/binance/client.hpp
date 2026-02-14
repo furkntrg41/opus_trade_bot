@@ -101,6 +101,21 @@ struct TradeUpdate {
     Timestamp trade_time;
 };
 
+struct AccountTrade {
+    int64_t id;
+    Symbol symbol;
+    int64_t order_id;
+    Side side;
+    Price price;
+    Quantity quantity;
+    double realized_pnl;
+    double commission;
+    std::string commission_asset;
+    Timestamp time;
+    bool is_buyer;
+    bool is_maker;
+};
+
 struct KlineUpdate {
     Symbol symbol;
     Kline kline;
@@ -157,8 +172,11 @@ public:
     /// Get position for specific symbol
     [[nodiscard]] virtual std::optional<PositionInfo> get_position(const Symbol& symbol) = 0;
 
+    /// Get account trade history (for PnL calculation)
+    [[nodiscard]] virtual std::vector<AccountTrade> get_account_trades(const Symbol& symbol, int limit = 5) = 0;
+
     /// Get all open orders
-    [[nodiscard]] virtual std::vector<OrderInfo> get_open_orders(const Symbol& symbol = {}) = 0;
+    [[nodiscard]] virtual std::vector<OrderInfo> get_open_orders(const Symbol& symbol = Symbol{}) = 0;
 
     /// Place a new order
     [[nodiscard]] virtual std::optional<OrderInfo> place_order(const OrderRequest& request) = 0;
@@ -209,6 +227,14 @@ public:
     /// Set error callback
     virtual void on_error(ErrorCallback callback) = 0;
 
+    /// Set reconnect callback (attempt, backoff delay)
+    using ReconnectCallback = std::function<void(size_t, std::chrono::seconds)>;
+    virtual void on_reconnect(ReconnectCallback callback) = 0;
+
+    /// Set callback for when WS connection is established (including reconnects)
+    using ConnectCallback = std::function<void()>;
+    virtual void on_ws_connect(ConnectCallback callback) = 0;
+
     // ========================================================================
     // Connection Management
     // ========================================================================
@@ -240,7 +266,8 @@ public:
     [[nodiscard]] std::optional<AccountInfo> get_account_info() override;
     [[nodiscard]] std::vector<PositionInfo> get_positions() override;
     [[nodiscard]] std::optional<PositionInfo> get_position(const Symbol& symbol) override;
-    [[nodiscard]] std::vector<OrderInfo> get_open_orders(const Symbol& symbol = {}) override;
+    [[nodiscard]] std::vector<AccountTrade> get_account_trades(const Symbol& symbol, int limit = 5) override;
+    [[nodiscard]] std::vector<OrderInfo> get_open_orders(const Symbol& symbol = Symbol{}) override;
     [[nodiscard]] std::optional<OrderInfo> place_order(const OrderRequest& request) override;
     bool cancel_order(const Symbol& symbol, int64_t order_id) override;
     bool cancel_all_orders(const Symbol& symbol) override;
@@ -261,6 +288,8 @@ public:
                           KlineCallback callback) override;
     void unsubscribe(const Symbol& symbol) override;
     void on_error(ErrorCallback callback) override { on_error_ = std::move(callback); }
+    void on_reconnect(ReconnectCallback callback) override;
+    void on_ws_connect(ConnectCallback callback) override;
 
     // Connection Management
     void start() override;
@@ -272,6 +301,7 @@ private:
     std::unique_ptr<Impl> impl_;
 
     ErrorCallback on_error_;
+    ConnectCallback on_ws_connect_;
 };
 
 // ============================================================================

@@ -32,7 +32,7 @@ class OrderBook {
 public:
     static constexpr size_t MAX_LEVELS = 1000;
 
-    explicit OrderBook(const OrderBookConfig& config = {});
+    explicit OrderBook(const OrderBookConfig& config = OrderBookConfig{});
 
     // ========================================================================
     // Snapshot Operations

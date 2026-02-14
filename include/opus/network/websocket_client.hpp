@@ -48,16 +48,17 @@ struct WebSocketConfig {
 
     // Connection settings
     std::chrono::seconds connect_timeout{10};
-    std::chrono::seconds read_timeout{30};
+    std::chrono::seconds read_timeout{90};
 
     // Reconnection settings
     bool auto_reconnect = true;
-    std::chrono::seconds reconnect_delay{5};
-    size_t max_reconnect_attempts = 10;
+    std::chrono::seconds reconnect_delay{2};     // Base delay (exponential backoff)
+    std::chrono::seconds max_reconnect_delay{60}; // Cap at 60s
+    size_t max_reconnect_attempts = 0;            // 0 = unlimited
 
     // Heartbeat/ping
     bool enable_ping = true;
-    std::chrono::seconds ping_interval{30};
+    std::chrono::seconds ping_interval{15};
 
     // Buffer sizes
     size_t read_buffer_size = 65536;   // 64KB
@@ -74,6 +75,7 @@ public:
     using ErrorCallback = std::function<void(const std::string&)>;
     using ConnectCallback = std::function<void()>;
     using DisconnectCallback = std::function<void()>;
+    using ReconnectCallback = std::function<void(size_t attempt, std::chrono::seconds delay)>;
 
     virtual ~IWebSocketClient() = default;
 
@@ -100,6 +102,9 @@ public:
 
     /// Set disconnect callback
     virtual void on_disconnect(DisconnectCallback callback) = 0;
+
+    /// Set reconnect attempt callback (attempt #, delay before next try)
+    virtual void on_reconnect(ReconnectCallback callback) = 0;
 };
 
 // ============================================================================
@@ -126,6 +131,7 @@ public:
     void on_error(ErrorCallback callback) override { on_error_ = std::move(callback); }
     void on_connect(ConnectCallback callback) override { on_connect_ = std::move(callback); }
     void on_disconnect(DisconnectCallback callback) override { on_disconnect_ = std::move(callback); }
+    void on_reconnect(ReconnectCallback callback) override { on_reconnect_ = std::move(callback); }
 
     /// Start the I/O context (blocking)
     void run();
@@ -146,6 +152,7 @@ private:
     ErrorCallback on_error_;
     ConnectCallback on_connect_;
     DisconnectCallback on_disconnect_;
+    ReconnectCallback on_reconnect_;
 
     // State
     std::atomic<bool> connected_{false};

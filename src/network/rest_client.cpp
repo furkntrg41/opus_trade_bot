@@ -15,6 +15,7 @@
 #include <openssl/sha.h>
 
 #include <atomic>
+#include <cctype>
 #include <chrono>
 #include <deque>
 #include <iomanip>
@@ -121,12 +122,14 @@ struct RestClient::Impl {
             auto results = resolver_.resolve(base_url_, "443");
 
             // Connect
+            beast::get_lowest_layer(stream).expires_after(config_.connect_timeout);
             beast::get_lowest_layer(stream).connect(results);
 
             // SSL handshake
             if (!SSL_set_tlsext_host_name(stream.native_handle(), base_url_.c_str())) {
                 throw std::runtime_error("Failed to set SNI hostname");
             }
+            beast::get_lowest_layer(stream).expires_after(config_.connect_timeout);
             stream.handshake(ssl::stream_base::client);
 
             // Build request
@@ -181,6 +184,7 @@ struct RestClient::Impl {
             }
 
             // Send request
+            beast::get_lowest_layer(stream).expires_after(config_.request_timeout);
             http::write(stream, http_req);
 
             // Read response

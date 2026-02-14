@@ -95,6 +95,10 @@ public:
     constexpr explicit Quantity(int64_t raw_value) noexcept : value_(raw_value) {}
 
     [[nodiscard]] static Quantity from_double(double qty) noexcept {
+        if (!std::isfinite(qty)) return Quantity{0};
+        // Clamp to prevent overflow
+        if (qty > 9.2e10) return Quantity{std::numeric_limits<int64_t>::max()};
+        if (qty < -9.2e10) return Quantity{std::numeric_limits<int64_t>::min() + 1}; // +1 to avoid collision with special "invalid" logic if any
         return Quantity{static_cast<int64_t>(qty * PRECISION)};
     }
     
@@ -199,7 +203,15 @@ public:
     [[nodiscard]] bool empty() const noexcept { return length_ == 0; }
 
     bool operator==(const Symbol& other) const noexcept {
-        return length_ == other.length_ && std::equal(data_, data_ + length_, other.data_);
+        return view() == other.view();
+    }
+
+    bool operator!=(const Symbol& other) const noexcept {
+        return !(*this == other);
+    }
+
+    bool operator<(const Symbol& other) const noexcept {
+        return view() < other.view();
     }
 
 private:

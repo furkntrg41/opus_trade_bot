@@ -39,6 +39,7 @@ if(MSVC)
         /permissive-            # Strict conformance
         /Zc:__cplusplus         # Correct __cplusplus macro
         /utf-8                  # UTF-8 source and execution charset
+        /bigobj                 # Increase object file section limit (Fixes C1128)
         $<$<CONFIG:Release>:/O2>        # Maximum optimization
         $<$<CONFIG:Release>:/GL>        # Whole program optimization
         $<$<CONFIG:Release>:/DNDEBUG>   # No debug
@@ -156,10 +157,11 @@ if(OpenSSL_FOUND)
     target_link_libraries(opus_network PUBLIC OpenSSL::SSL OpenSSL::Crypto)
 endif()
 
-# Exchange library (Binance integration)
+# Exchange library (Binance# Exchange library
 add_library(opus_exchange STATIC
     src/exchange/binance/client.cpp
     src/exchange/binance/auth.cpp
+    src/exchange/mock_client.cpp
     src/exchange/binance/market_data.cpp
 )
 target_link_libraries(opus_exchange PUBLIC opus_network)
@@ -173,8 +175,10 @@ add_library(opus_market STATIC
     src/market/kline.cpp
     src/market/ticker.cpp
     src/market/binary_writer.cpp
+    src/market/recorder.cpp
+    src/market/replay_engine.cpp
 )
-target_link_libraries(opus_market PUBLIC opus_core)
+target_link_libraries(opus_market PUBLIC opus_core opus_exchange)
 
 # Strategy library (Indicators, Signals)
 add_library(opus_strategy STATIC
@@ -185,7 +189,10 @@ add_library(opus_strategy STATIC
     src/strategy/order_book_imbalance.cpp
     src/strategy/signal_generator.cpp
 )
-target_link_libraries(opus_strategy PUBLIC opus_market)
+target_link_libraries(opus_strategy PUBLIC opus_core)
+target_include_directories(opus_strategy PUBLIC include)
+
+
 
 # Order management library
 add_library(opus_order STATIC
@@ -203,12 +210,52 @@ target_link_libraries(opus_bot PRIVATE
     opus_core
     opus_network
     opus_exchange
-    opus_market
     opus_strategy
     opus_order
+    opus_market
 )
 if(yaml-cpp_FOUND)
     target_link_libraries(opus_bot PRIVATE yaml-cpp::yaml-cpp)
+endif()
+
+# Debug/Diagnostic Executable (to bypass file locks)
+add_executable(opus_bot_debug src/main.cpp)
+target_link_libraries(opus_bot_debug PRIVATE
+    opus_core
+    opus_network
+    opus_exchange
+    opus_strategy
+    opus_order
+    opus_market
+)
+if(yaml-cpp_FOUND)
+    target_link_libraries(opus_bot_debug PRIVATE yaml-cpp::yaml-cpp)
+endif()
+
+# Manual Test Tool
+add_executable(manual_trade_test src/tools/manual_trade_test.cpp)
+target_link_libraries(manual_trade_test PRIVATE
+    opus_core
+    opus_network
+    opus_exchange
+    opus_order  # Added for OrderManager
+    opus_market
+)
+if(yaml-cpp_FOUND)
+    target_link_libraries(manual_trade_test PRIVATE yaml-cpp::yaml-cpp)
+endif()
+
+# V2 Bypass target
+add_executable(manual_trade_test_v2 src/tools/manual_trade_test.cpp)
+target_link_libraries(manual_trade_test_v2 PRIVATE
+    opus_core
+    opus_network
+    opus_exchange
+    opus_order
+    opus_market
+)
+if(yaml-cpp_FOUND)
+    target_link_libraries(manual_trade_test_v2 PRIVATE yaml-cpp::yaml-cpp)
 endif()
 
 # ============================================================================

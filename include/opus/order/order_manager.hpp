@@ -37,6 +37,12 @@ public:
         Side side,
         Quantity quantity);
 
+    /// Place a reduce-only market order (emergency close)
+    std::optional<exchange::binance::OrderInfo> place_reduce_only_market_order(
+        const Symbol& symbol,
+        Side side,
+        Quantity quantity);
+
     /// Place a limit order
     std::optional<exchange::binance::OrderInfo> place_limit_order(
         const Symbol& symbol,

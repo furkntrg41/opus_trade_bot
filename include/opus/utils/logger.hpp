@@ -54,7 +54,7 @@ struct LogConfig {
 class Logger {
 public:
     /// Initialize the global logger
-    static void initialize(const LogConfig& config = {});
+    static void initialize(const LogConfig& config = LogConfig{});
 
     /// Shutdown the logger (flush and close)
     static void shutdown();

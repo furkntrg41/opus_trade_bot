@@ -7,6 +7,7 @@
 // ============================================================================
 
 #include "opus/order/risk_manager.hpp"
+#include <memory>
 
 namespace opus::order {
 

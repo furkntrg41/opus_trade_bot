@@ -30,6 +30,27 @@ std::optional<exchange::binance::OrderInfo> OrderManager::place_market_order(
     return result;
 }
 
+std::optional<exchange::binance::OrderInfo> OrderManager::place_reduce_only_market_order(
+    const Symbol& symbol,
+    Side side,
+    Quantity quantity) {
+
+    exchange::binance::OrderRequest request;
+    request.symbol = symbol;
+    request.side = side;
+    request.type = OrderType::Market;
+    request.quantity = quantity;
+    request.reduce_only = true;
+    request.client_order_id = generate_client_order_id() + "_RO";
+
+    auto result = client_.place_order(request);
+    if (result) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        pending_orders_[result->order_id] = *result;
+    }
+    return result;
+}
+
 std::optional<exchange::binance::OrderInfo> OrderManager::place_limit_order(
     const Symbol& symbol,
     Side side,
@@ -82,9 +103,10 @@ BracketOrderResult OrderManager::place_bracket_order(
     sl_req.symbol = symbol;
     sl_req.side = close_side;
     sl_req.type = OrderType::StopMarket;
-    sl_req.quantity = quantity; // Close full position
-    sl_req.stop_price = stop_loss_price;
+    // sl_req.close_position = true; // CAUSES -4120 on Testnet
     sl_req.reduce_only = true;
+    sl_req.quantity = quantity; // Match entry quantity
+    sl_req.stop_price = stop_loss_price;
     sl_req.client_order_id = generate_client_order_id() + "_SL";
     
     std::cout << "[ORDER] Placing Stop Loss at " << stop_loss_price.to_double() << "...\n";
@@ -102,9 +124,10 @@ BracketOrderResult OrderManager::place_bracket_order(
     tp_req.symbol = symbol;
     tp_req.side = close_side;
     tp_req.type = OrderType::TakeProfitMarket;
-    tp_req.quantity = quantity; // Close full position
-    tp_req.stop_price = take_profit_price;
+    // tp_req.close_position = true; // CAUSES -4120 on Testnet
     tp_req.reduce_only = true;
+    tp_req.quantity = quantity; // Match entry quantity
+    tp_req.stop_price = take_profit_price;
     tp_req.client_order_id = generate_client_order_id() + "_TP";
 
     std::cout << "[ORDER] Placing Take Profit at " << take_profit_price.to_double() << "...\n";
@@ -158,8 +181,40 @@ void OrderManager::sync_orders(const Symbol& symbol) {
     }
 }
 
+#include <cstdlib>
+#include <ctime>
+#include <cstdio>
+#include <string>
+#include <chrono>
+#include <thread>
+#include <functional>
+
+namespace {
+    // Thread-local boolean to initialize seed once per thread
+    thread_local bool seeded = false;
+}
+
 std::string OrderManager::generate_client_order_id() {
-    return "opus_" + std::to_string(++order_counter_);
+    if (!seeded) {
+        std::srand(static_cast<unsigned int>(std::time(nullptr)) + 
+                   static_cast<unsigned int>(std::hash<std::thread::id>{}(std::this_thread::get_id())));
+        seeded = true;
+    }
+
+    auto now = std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::system_clock::now()).time_since_epoch().count();
+    uint64_t count = order_counter_++;
+    int rand_val = std::rand() & 0xFFFF; // Keep it short (4 hex chars)
+    
+    // Format: o_TIMESTAMP_COUNTER_HEX
+    // Ex: o_1707895432_1_A1B2 (approx 20 chars)
+    // _SL suffix adds 3 chars -> 23 chars (Safe under 36)
+    char buffer[64];
+    std::snprintf(buffer, sizeof(buffer), "o_%lld_%llu_%X", 
+                  static_cast<long long>(now), 
+                  static_cast<unsigned long long>(count), 
+                  rand_val);
+    
+    return std::string(buffer);
 }
 
 }  // namespace opus::order
